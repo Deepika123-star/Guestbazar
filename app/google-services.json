@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1021863443051",
+    "firebase_url": "https://guestbazar-b35ee.firebaseio.com",
+    "project_id": "guestbazar-b35ee",
+    "storage_bucket": "guestbazar-b35ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021863443051:android:519d31ff6fd723ab00cf2e",
+        "android_client_info": {
+          "package_name": "com.smartwebarts.guestbazar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021863443051-kksig57h1lkjbunlbchmjt9ct3jqbgm4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpywspcuK0jg8T7T6KP7uz4eD7JWiSmf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021863443051-kksig57h1lkjbunlbchmjt9ct3jqbgm4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
