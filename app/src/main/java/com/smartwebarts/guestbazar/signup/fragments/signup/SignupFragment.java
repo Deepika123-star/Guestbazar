@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import com.smartwebarts.guestbazar.LoginActivity;
 import com.smartwebarts.guestbazar.R;
 import com.smartwebarts.guestbazar.SignInActivity;
 import com.smartwebarts.guestbazar.retrofit.UtilMethods;
@@ -32,6 +34,7 @@ public class SignupFragment extends Fragment {
     private TextInputEditText mobile;
     FloatingActionButton  floatingActionButton;
     private String mobileNumber;
+    private TextView textView2;
 
     public static SignupFragment newInstance() {
         return new SignupFragment();
@@ -45,6 +48,7 @@ public class SignupFragment extends Fragment {
         fullname = view.findViewById(R.id.fullName);
         email = view.findViewById(R.id.email);
         mobile = view.findViewById(R.id.mobile);
+        textView2 = view.findViewById(R.id.textView2);
         password = view.findViewById(R.id.password);
 
         if (getArguments()!=null) {
@@ -64,6 +68,14 @@ public class SignupFragment extends Fragment {
 
                     requestSignUp(v);
                 }
+            }
+        });
+
+        textView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(requireActivity(), LoginActivity.class));
+                requireActivity().finishAffinity();
             }
         });
         return view;

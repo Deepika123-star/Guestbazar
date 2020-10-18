@@ -28,9 +28,9 @@ import com.smartwebarts.guestbazar.utils.Toolbar_Set;
 public class ProductListActivity extends AppCompatActivity {
 
     RecyclerView rvProductList, rvProductGrid;
-    SubSubCategoryModel subSubCategory;
+//    SubSubCategoryModel subSubCategory;
     CategoryModel category;
-    SubCategoryModel subCategory;
+//    SubCategoryModel subCategory;
     TextView tv_subsubCategory;
 
     @Override
@@ -43,16 +43,16 @@ public class ProductListActivity extends AppCompatActivity {
 
         tv_subsubCategory = findViewById(R.id.subsubCategory);
 
-        subCategory = (SubCategoryModel) getIntent().getSerializableExtra("subCategory");
+//        subCategory = (SubCategoryModel) getIntent().getSerializableExtra("subCategory");
         category = (CategoryModel) getIntent().getSerializableExtra("category");
-        subSubCategory = (SubSubCategoryModel) getIntent().getSerializableExtra("subsubcategory");
-        tv_subsubCategory.setText(subSubCategory.getName());
+//        subSubCategory = (SubSubCategoryModel) getIntent().getSerializableExtra("subsubcategory");
+        tv_subsubCategory.setText(category.getName());
 
-        Toolbar_Set.INSTANCE.setToolbar(this, subCategory.getName());
+        Toolbar_Set.INSTANCE.setToolbar(this, category.getName());
         Toolbar_Set.INSTANCE.setBottomNav(this);
 
         if (UtilMethods.INSTANCE.isNetworkAvialable(this)) {
-            UtilMethods.INSTANCE.products(this, category.getId(),subCategory.getId(), subSubCategory.getId(),new mCallBackResponse() {
+            UtilMethods.INSTANCE.products(this, category.getId(),"",""/*subCategory.getId(), subSubCategory.getId()*/,new mCallBackResponse() {
                 @Override
                 public void success(String from, String message) {
                     Type listType = new TypeToken<ArrayList<ProductModel>>(){}.getType();

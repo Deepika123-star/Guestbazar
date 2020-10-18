@@ -41,14 +41,14 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="55dp"
                     android:hint="Add a Landmark"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
                         android:id="@+id/places_autocomplete"
                         android:layout_width="match_parent"
-                        android:layout_height="32dp"
+                        android:layout_height="match_parent"
                         android:fontFamily="@font/opensans_semibold"
                         android:inputType="textPostalAddress"
                         android:padding="14dp"

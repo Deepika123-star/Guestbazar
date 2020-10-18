@@ -64,6 +64,7 @@ import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.smartwebarts.guestbazar.BuildConfig;
 import com.smartwebarts.guestbazar.ContactUsActivity;
 import com.smartwebarts.guestbazar.R;
+import com.smartwebarts.guestbazar.retrofit.UtilMethods;
 import com.smartwebarts.guestbazar.shopbycategory.ShopByCategoryActivity;
 import com.smartwebarts.guestbazar.SignInActivity;
 import com.smartwebarts.guestbazar.WebViewActivity;
@@ -110,6 +111,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 R.id.nav_tools, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
+
+        UtilMethods.INSTANCE.version(this, null);
+
     }
 
     private void turnongps() {
@@ -319,7 +323,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             case R.id.privacy_policy: {
                 Intent intent = new Intent(DashboardActivity.this, WebViewActivity.class);
                 intent.putExtra(WebViewActivity.DATA, ApplicationConstants.INSTANCE.PRIVACY_POLICY);
-                // intent.putExtra(WebViewActivity.TITLE, "Privacy Policy");
+                 intent.putExtra(WebViewActivity.TITLE, "Privacy Policy");
                 startActivity(intent);
                 break;
             }
@@ -333,13 +337,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             case R.id.about_us: {
                 Intent intent = new Intent(DashboardActivity.this, WebViewActivity.class);
                 intent.putExtra(WebViewActivity.DATA, ApplicationConstants.INSTANCE.ABOUT_US);
-                // intent.putExtra(WebViewActivity.TITLE, "About Us");
+                 intent.putExtra(WebViewActivity.TITLE, "About Us");
                 startActivity(intent);
                 break;
             }
             case R.id.live_chat: {
                 try {
-                    String url = "https://chat.whatsapp.com/Hyl29wW5DhKE05LZQ2BIrK";
+                    String url = "https://chat.whatsapp.com/";
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 } catch (Exception e) {
                     Toast.makeText(this, "Unable to open your whatsapp", Toast.LENGTH_SHORT).show();
@@ -390,11 +394,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 //        Uri dynamicLinkUri = dynamicLink.getUri();
 
         AppSharedPreferences preferences = new AppSharedPreferences(getApplication());
-        String referlink = "https://globalfreshbasket.page.link?" +
+        String referlink = "https://guestbazar.page.link?" +
                 "apn=" + BuildConfig.APPLICATION_ID +
                 "&st=My Refer Link" +
                 "&sd=Register using this link to earn rewards" +
-                "&si=http://happiindia.com/assets/img/web/logo/1595329767logo2.png" +
+                "&si=https://guestbazar.com/assets/img/web/logo/1601636146finle%20logo.png" +
                 "&link=" + ApplicationConstants.INSTANCE.SITE_URL + "api.php?custid=" + preferences.getLoginUserLoginId();
 
 //        Log.e("referlink", dynamicLinkUri.toString());
@@ -427,8 +431,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                         }
                     }
                 });
-
-
     }
 
     private void logout() {

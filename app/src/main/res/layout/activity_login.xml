@@ -28,11 +28,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Guest Bazar"
+            android:text="@string/tagline"
             android:id="@+id/text_sign"
-            android:textSize="50dp"
+            android:textSize="30dp"
             android:layout_margin="10dp"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton

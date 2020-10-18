@@ -29,7 +29,7 @@
     <string name="gobinto">Guest Bazar</string>
     <string name="welcome_to">Welcome to Guest Bazar</string>
     <string name="contact">Contact</string>
-    <string name="address">Thatipur , Gwalior 474011</string>
+    <string name="address">Almora, ALMORA Uttarakhand - 263601</string>
     <string name="days_returns">Return at delivery time</string>
     <array name="reasonsforcancellation">
         <item>Select a reason</item>
@@ -46,4 +46,10 @@
     <string name="err_msg_pass">Please Enter Your Password.</string>
     <string name="my_wallet_amount">My Wallet Amount</string>
     <string name="recharge_wallet">Recharge Wallet</string>
+    <string name="tagline">Guest Bazar, Aapke Dwar</string>
+    <string name="payumoney_key">oXp4WsMJ</string>
+    <string name="payumoney_firstname">firstname</string>
+    <string name="payumoney_email">email</string>
+    <string name="salt">XV2FAmcfQ1</string>
+    <string name="merchant_ID">7268985</string>
 </resources>

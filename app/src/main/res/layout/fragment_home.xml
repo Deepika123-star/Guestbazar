@@ -22,12 +22,12 @@
             android:layout_marginTop="10dp"/>
 
         <Button
+            android:id="@+id/shopbycategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:text="Shop by Category"
             android:textAllCaps="false"
-            android:onClick="shopbycategory"
             android:textSize="@dimen/_16sdp"
             android:nestedScrollingEnabled="false"
             android:layout_margin="10dp"/>

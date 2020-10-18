@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
     private HomeViewModel homeViewModel;
     private SliderLayout home_list_banner;
     private RecyclerView recyclerView, recyclerViewBottom;
+    private Button shopbycategory;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -45,17 +47,23 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         init(view);
+        shopbycategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shopbycategory(v);
+            }
+        });
 
-        if (UtilMethods.INSTANCE.isNetworkAvialable(getActivity())) {
+        if (UtilMethods.INSTANCE.isNetworkAvialable(requireActivity())) {
             UtilMethods.INSTANCE.categories(getActivity(), new mCallBackResponse() {
                 @Override
                 public void success(String from, String message) {
                     Type listType = new TypeToken<ArrayList<CategoryModel>>(){}.getType();
                     List<CategoryModel> list = new Gson().fromJson(message, listType);
-                    SharedPreferences sharedpreferences = getActivity().getSharedPreferences(ApplicationConstants.INSTANCE.MyPREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences sharedpreferences = requireActivity().getSharedPreferences(ApplicationConstants.INSTANCE.MyPREFERENCES, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(ApplicationConstants.INSTANCE.PRODUCT_LIST, message);
-                    editor.commit();
+                    editor.apply();
                     setTopRecycler(list);
                     setBottomRecycler(list);
                 }
@@ -102,6 +110,7 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerViewBottom = (RecyclerView) view.findViewById(R.id.recyclerViewBottom);
         home_list_banner =  (SliderLayout) view.findViewById(R.id.home_img_slider);
+        shopbycategory =  (Button) view.findViewById(R.id.shopbycategory);
 
     }
 

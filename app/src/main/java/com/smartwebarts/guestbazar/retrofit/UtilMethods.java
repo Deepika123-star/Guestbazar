@@ -2,13 +2,20 @@ package com.smartwebarts.guestbazar.retrofit;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.gson.Gson;
@@ -22,6 +29,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import com.rampo.updatechecker.UpdateChecker;
+import com.smartwebarts.guestbazar.BuildConfig;
 import com.smartwebarts.guestbazar.R;
 import com.smartwebarts.guestbazar.address.DeliveryProductDetails;
 import com.smartwebarts.guestbazar.dashboard.ui.home.SliderImageData;
@@ -48,6 +58,7 @@ import com.smartwebarts.guestbazar.models.SocialDataCheckModel;
 import com.smartwebarts.guestbazar.models.SubCategoryModel;
 import com.smartwebarts.guestbazar.models.SubSubCategoryModel;
 import com.smartwebarts.guestbazar.models.VendorModel;
+import com.smartwebarts.guestbazar.models.VersionModel;
 import com.smartwebarts.guestbazar.shared_preference.LoginData;
 import com.smartwebarts.guestbazar.utils.ApplicationConstants;
 
@@ -1871,4 +1882,88 @@ public enum UtilMethods {
 
     }
 
+    public void version(Context context, final mCallBackResponse callBackResponse) {
+
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.default_progress_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        ProgressBar progressBar = (ProgressBar)dialog.findViewById(R.id.progress);
+        DoubleBounce doubleBounce = new DoubleBounce();
+        progressBar.setIndeterminateDrawable(doubleBounce);
+        dialog.show();
+
+        try {
+            EndPointInterface git = APIClient.getClient().create(EndPointInterface.class);
+            Call<List<VersionModel>> call = git.version();
+            call.enqueue(new Callback<List<VersionModel>>() {
+                @Override
+                public void onResponse(Call<List<VersionModel>> call, Response<List<VersionModel>> response) {
+                    dialog.dismiss();
+                    String strResponse = new Gson().toJson(response.body());
+                    Log.e("strResponse",strResponse);
+                    if (response.body()!=null) {
+                        if (response.body().size()>0) {
+//                            callbackresponse.success("", strresponse);
+                            if (response.body().get(0).getVcode() > BuildConfig.VERSION_CODE) {
+                                UpdateDialog(context);
+                            }
+                        }
+                        else {
+//                            callBackResponse.fail("No data");
+                        }
+                    } else {
+//                        callBackResponse.fail("No data");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<VersionModel>> call, Throwable t) {
+//                    callBackResponse.fail(t.getMessage());
+                    dialog.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            callBackResponse.fail(e.getMessage());
+            dialog.dismiss();
+        }
+    }
+
+    public void UpdateDialog(final Context context) {
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.update_available, null);
+
+        TextView tvLater = (TextView) view.findViewById(R.id.tv_later);
+        Button tvOk = (Button) view.findViewById(R.id.tv_ok);
+
+        final Dialog dialog = new Dialog(context);
+
+        dialog.setCancelable(false);
+        dialog.setContentView(view);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        tvLater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMarket(context);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private static void goToMarket(Context mContext) {
+        mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(UpdateChecker.ROOT_PLAY_STORE_DEVICE + mContext.getPackageName())));
+    }
 }

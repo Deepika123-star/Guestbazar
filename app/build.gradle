@@ -13,12 +13,11 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
-       // applicationId "com.smartwebarts.guestbazar"
         applicationId "com.smartwebarts.guestbazar"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,7 +38,7 @@ android {
     }
   /*  googleaccountGmailDetails{
         email 'guestbazar3@gmail.com'
-        password 'guestbazar@123'
+        password 'GuestBazar@123'
     }
    */
 
@@ -114,5 +113,9 @@ dependencies {
     /*PlacesAutocompleteTextView*/
     implementation 'com.seatgeek:placesautocomplete:0.3-SNAPSHOT'
 
+/*    *//*payumoney*//*
+    implementation 'com.payumoney.sdkui:plug-n-play:1.6.0'*/
 
+    /*update checker*/
+    implementation 'com.github.rampo.updatechecker:library:2.1.8'
 }

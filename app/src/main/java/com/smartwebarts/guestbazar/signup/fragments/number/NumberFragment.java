@@ -2,6 +2,7 @@ package com.smartwebarts.guestbazar.signup.fragments.number;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,12 +13,14 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
+import com.smartwebarts.guestbazar.LoginActivity;
 import com.smartwebarts.guestbazar.R;
 import com.smartwebarts.guestbazar.models.OTPModel;
 import com.smartwebarts.guestbazar.retrofit.UtilMethods;
@@ -28,6 +31,7 @@ public class NumberFragment extends Fragment {
     private NumberViewModel mViewModel;
     private FloatingActionButton floatingActionButton;
     private TextInputEditText mobile;
+    private TextView textView2;
 
     public static NumberFragment newInstance() {
         return new NumberFragment();
@@ -40,6 +44,7 @@ public class NumberFragment extends Fragment {
 
         floatingActionButton = view.findViewById(R.id.floatingActionButton);
         mobile = view.findViewById(R.id.mobile);
+        textView2 = view.findViewById(R.id.textView2);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +55,8 @@ public class NumberFragment extends Fragment {
                 requestOtp(v);
             }
         });
+
+
         return view;
     }
 

@@ -26,6 +26,8 @@ import com.razorpay.PaymentResultListener;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.smartwebarts.guestbazar.PayUMoneyActivity;
 import com.smartwebarts.guestbazar.R;
 import com.smartwebarts.guestbazar.dashboard.DashboardActivity;
 import com.smartwebarts.guestbazar.database.DatabaseClient;
@@ -251,62 +254,145 @@ public class DeliveryOptionActivity extends AppCompatActivity  implements Paymen
         addListeners();
     }
 
-    public void startPayment() {
-        /**
-         * Instantiate Checkout
-         */
-        Checkout checkout = new Checkout();
-        checkout.setKeyID(""+getString(R.string.razor_api_key));
-
-
-        /**
-         * Set your logo here
-         */
-        checkout.setImage(R.drawable.logo);
-
-        /**
-         * Reference to current activity
-         */
-        final Activity activity = this;
-
-        /**
-         * Pass your payment options to the Razorpay Checkout as a JSONObject
-         */
+    public static String hashCal(String type, String hashString) {
+        StringBuilder hash = new StringBuilder();
+        MessageDigest messageDigest = null;
         try {
-            JSONObject options = new JSONObject();
-
-            /**
-             * Merchant Name
-             * eg: ACME Corp || HasGeek etc.
-             */
-            options.put("name", "Global Fresh Basket");
-
-            /**
-             * Description can be anything
-             * eg: Reference No. #123123 - This order number is passed by you for your internal reference. This is not the `razorpay_order_id`.
-             *     Invoice Payment
-             *     etc.
-             */
-            options.put("description", "Reference No. #123456");
-            options.put("image", getDrawable(R.drawable.logo));
-//            options.put("order_id", ""+model.getOrderid());
-            options.put("currency", "INR");
-
-            /**
-             * Amount is always passed in currency subunits
-             * Eg: "500" = INR 5.00
-             */
-
-            int dAmount = Integer.parseInt("0"+amount);
-            dAmount*=100;
-
-            options.put("amount", ""+dAmount);
-
-            checkout.open(this, options);
-        } catch(Exception e) {
-            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+            messageDigest = MessageDigest.getInstance(type);
+            messageDigest.update(hashString.getBytes());
+            byte[] mdbytes = messageDigest.digest();
+            for (byte hashByte : mdbytes) {
+                hash.append(Integer.toString((hashByte & 0xff) + 0x100, 16).substring(1));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
+        return hash.toString();
     }
+
+    public void startPayment() {
+
+        AppSharedPreferences preferences = new AppSharedPreferences(getApplication());
+        Intent intent = new Intent(DeliveryOptionActivity.this, PayUMoneyActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("name", preferences.getLoginUserName());
+        bundle.putString("email", preferences.getLoginEmail());
+        bundle.putString("productInfo", "Payment for "+ getString(R.string.app_name));
+        bundle.putString("phone", preferences.getLoginMobile());
+        bundle.putString("amount", amount);
+//        bundle.putString("amount", "1");
+
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 1234);
+    }
+
+    /*payumoney*/
+    /*public void startPayment() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        AppSharedPreferences preferences = new AppSharedPreferences(getApplication());
+        String hashSequence = getString(R.string.payumoney_key) + "|" + "txnid" + "|" + amount + "|" + "productinfo" + "|" + preferences.getLoginUserName() + "|" + preferences.getLoginEmail() + "|" + "udf1" + "|" + "udf2" + "|" + "udf3" + "|" + "udf4" + "|" + "udf5" + "|" + "" + "|" + "" + "|" + "" + "|" + "" + "|" + "" + "|" + getString(R.string.salt);
+        String serverCalculatedHash = hashCal("SHA-512", hashSequence);
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new
+                PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(amount)                          // Payment amount
+                .setTxnId("txnId")                                             // Transaction ID
+                .setPhone(preferences.getLoginMobile())                                           // User Phone number
+                .setProductName(getString(R.string.app_name))                   // Product Name or description
+                .setFirstName(preferences.getLoginUserName())                              // User First name
+                .setEmail(preferences.getLoginEmail())                                            // User Email ID
+                .setsUrl(ApplicationConstants.INSTANCE.SUCCESS_URL)                    // Success URL (surl)
+                .setfUrl(ApplicationConstants.INSTANCE.FAILED_URL)                     //Failure URL (furl)
+                .setUdf1("udf1")
+                .setUdf2("udf2")
+                .setUdf3("udf3")
+                .setUdf4("udf4")
+                .setUdf5("udf5")
+                .setUdf6("udf6")
+                .setUdf7("udf7")
+                .setUdf8("udf8")
+                .setUdf9("udf9")
+                .setUdf10("udf10")
+                .setIsDebug(true)                              // Integration environment - true (Debug)/ false(Production)
+                .setKey(getString(R.string.payumoney_key))                        // Merchant key
+                .setMerchantId(getString(R.string.merchant_ID));             // Merchant ID
+
+        //declare paymentParam object
+        PayUmoneySdkInitializer.PaymentParam paymentParam = null;
+        try {
+            paymentParam = builder.build();
+            //set the hash
+            paymentParam.setMerchantHash(serverCalculatedHash);
+
+            // Invoke the following function to open the checkout page.
+            PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, DeliveryOptionActivity.this,
+                    R.style.AppTheme_default, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }*/
+
+    /*razorpay*/
+
+//    public void startPayment(){
+//        /**
+//         * Instantiate Checkout
+//         */
+//        Checkout checkout = new Checkout();
+//        checkout.setKeyID(""+getString(R.string.razor_api_key));
+//
+//
+//        /**
+//         * Set your logo here
+//         */
+//        checkout.setImage(R.drawable.logo);
+//
+//        /**
+//         * Reference to current activity
+//         */
+//        final Activity activity = this;
+//
+//        /**
+//         * Pass your payment options to the Razorpay Checkout as a JSONObject
+//         */
+//        try {
+//            JSONObject options = new JSONObject();
+//
+//            /**
+//             * Merchant Name
+//             * eg: ACME Corp || HasGeek etc.
+//             */
+//            options.put("name", getString(R.string.app_name));
+//
+//            /**
+//             * Description can be anything
+//             * eg: Reference No. #123123 - This order number is passed by you for your internal reference. This is not the `razorpay_order_id`.
+//             *     Invoice Payment
+//             *     etc.
+//             */
+//            options.put("description", "Online payment for" + getString(R.string.app_name));
+//            options.put("image", getDrawable(R.drawable.logo));
+////            options.put("order_id", ""+model.getOrderid());
+//            options.put("currency", "INR");
+//
+//            /**
+//             * Amount is always passed in currency subunits
+//             * Eg: "500" = INR 5.00
+//             */
+//
+//            int dAmount = Integer.parseInt("0"+amount);
+//            dAmount*=100;
+//
+//            options.put("amount", ""+dAmount);
+//
+//            checkout.open(this, options);
+//        } catch(Exception e) {
+//            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+//        }
+//    }
 
     @Override
     public void onPaymentSuccess(String s) {
@@ -590,8 +676,49 @@ public class DeliveryOptionActivity extends AppCompatActivity  implements Paymen
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
+
         if (requestCode == 123) {
             getWallet(null);
         }
+
+        if (requestCode == 1234) {
+            if (data != null) {
+                String message=data.getStringExtra("MESSAGE");
+
+                if (message != null) {
+                    if (message.equalsIgnoreCase("success")) {
+                        String s=data.getStringExtra("oid");
+                        buildJson(s);
+                    } else {
+                        Toast.makeText(this, "Payment Declined, Try Again", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+
+        // Result Code is -1 send from Payumoney activity
+//        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+//            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+//
+//            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+//
+//                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+//                    //Success Transaction
+//                } else {
+//                    //Failure Transaction
+//                }
+//
+//                // Response from Payumoney
+//                String payuResponse = transactionResponse.getPayuResponse();
+//
+//                // Response from SURl and FURL
+//                String merchantResponse = transactionResponse.getTransactionDetails();
+//            }  else if (resultModel != null && resultModel.getError() != null) {
+//                Log.d(TAG, "Error response : " + resultModel.getError().getTransactionResponse());
+//            } else {
+//                Log.d(TAG, "Both objects are null!");
+//            }
+        
     }
 }

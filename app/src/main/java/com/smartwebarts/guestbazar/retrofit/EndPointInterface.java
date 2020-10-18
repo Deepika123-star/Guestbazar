@@ -33,6 +33,7 @@ import com.smartwebarts.guestbazar.models.SocialDataCheckModel;
 import com.smartwebarts.guestbazar.models.SubCategoryModel;
 import com.smartwebarts.guestbazar.models.SubSubCategoryModel;
 import com.smartwebarts.guestbazar.models.VendorModel;
+import com.smartwebarts.guestbazar.models.VersionModel;
 import com.smartwebarts.guestbazar.shared_preference.LoginData;
 
 public interface EndPointInterface {
@@ -134,6 +135,9 @@ public interface EndPointInterface {
                                                   @Field("unitin") String unitin,
                                                   @Field("unit") String unit,
                                                   @Field("wishlist") String wishlist);
+
+    @GET("API/api_version")
+    Call<List<VersionModel>> version();
 
     @GET("API/api_categories")
     Call<List<CategoryModel>> categories();

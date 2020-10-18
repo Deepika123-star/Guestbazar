@@ -1,5 +1,6 @@
 package com.smartwebarts.guestbazar.wallet;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,7 +14,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
+import com.smartwebarts.guestbazar.PayUMoneyActivity;
 import com.smartwebarts.guestbazar.R;
+import com.smartwebarts.guestbazar.address.DeliveryOptionActivity;
 import com.smartwebarts.guestbazar.models.MessageModel;
 import com.smartwebarts.guestbazar.retrofit.UtilMethods;
 import com.smartwebarts.guestbazar.retrofit.mCallBackResponse;
@@ -71,37 +74,55 @@ public class RechargeWallet extends AppCompatActivity implements PaymentResultLi
 
     private void startPayment(String name, String amount, String email, String mobile) {
 
-        final Checkout co = new Checkout();
-        co.setKeyID(""+getString(R.string.razor_api_key));
+        AppSharedPreferences preferences = new AppSharedPreferences(getApplication());
+        Intent intent = new Intent(RechargeWallet.this, PayUMoneyActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("name", preferences.getLoginUserName());
+        bundle.putString("email", preferences.getLoginEmail());
+        bundle.putString("productInfo", "Payment for "+ getString(R.string.app_name));
+        bundle.putString("phone", preferences.getLoginMobile());
+        bundle.putString("amount", amount);
+//        bundle.putString("amount", "1");
 
-        try {
-
-            JSONObject options = new JSONObject();
-
-            options.put("name", name);
-            options.put("description", "Demoing Charges");
-            //You can omit the image option to fetch the image from dashboard
-            options.put("image", R.drawable.logo);
-            options.put("currency", "INR");
-
-            options.put("amount", Integer.parseInt(amount)*100);
-
-            JSONObject preFill = new JSONObject();
-
-            preFill.put("email", email);
-
-            preFill.put("contact", mobile);
-
-            options.put("prefill", preFill);
-
-            co.open(activity, options);
-
-        } catch (Exception e) {
-            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT)
-                    .show();
-            e.printStackTrace();
-        }
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 1234);
     }
+
+    /*Razor Pay*/
+
+//    private void startPayment(String name, String amount, String email, String mobile) {
+//
+//        final Checkout co = new Checkout();
+//        co.setKeyID(""+getString(R.string.razor_api_key));
+//
+//        try {
+//
+//            JSONObject options = new JSONObject();
+//
+//            options.put("name", name);
+//            options.put("description", "Demoing Charges");
+//            //You can omit the image option to fetch the image from dashboard
+//            options.put("image", R.drawable.logo);
+//            options.put("currency", "INR");
+//
+//            options.put("amount", Integer.parseInt(amount)*100);
+//
+//            JSONObject preFill = new JSONObject();
+//
+//            preFill.put("email", email);
+//
+//            preFill.put("contact", mobile);
+//
+//            options.put("prefill", preFill);
+//
+//            co.open(activity, options);
+//
+//        } catch (Exception e) {
+//            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT)
+//                    .show();
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void onPaymentSuccess(String s) {
@@ -159,6 +180,32 @@ public class RechargeWallet extends AppCompatActivity implements PaymentResultLi
 
             } else {
                 UtilMethods.INSTANCE.internetNotAvailableMessage(activity);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
+
+
+        if (requestCode == 1234) {
+            if (data != null) {
+                String message=data.getStringExtra("MESSAGE");
+
+                if (message != null) {
+                    if (message.equalsIgnoreCase("success")) {
+                        String s=data.getStringExtra("oid");
+                        Recharge_wallet(s);
+                        Toast.makeText(this, "Wallet Recharge Successful", Toast.LENGTH_SHORT).show();
+//                        overridePendingTransition(0, 0);
+                    } else {
+                        Toast.makeText(this, "Payment Declined, Try Again", Toast.LENGTH_SHORT).show();
+                        Recharge_wallet("failed");
+                    }
+                }
             }
         }
     }

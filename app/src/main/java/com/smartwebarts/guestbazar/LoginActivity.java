@@ -9,6 +9,7 @@ import android.util.Pair;
 import android.view.View;
 
 import com.smartwebarts.guestbazar.dashboard.DashboardActivity;
+import com.smartwebarts.guestbazar.retrofit.UtilMethods;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,5 +39,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UtilMethods.INSTANCE.version(this, null);
+
     }
 }

@@ -23,6 +23,7 @@ import com.smartwebarts.guestbazar.R;
 import com.smartwebarts.guestbazar.category.CategoryActivity;
 import com.smartwebarts.guestbazar.models.CategoryModel;
 import com.smartwebarts.guestbazar.models.SubCategoryModel;
+import com.smartwebarts.guestbazar.productlist.ProductListActivity;
 import com.smartwebarts.guestbazar.retrofit.UtilMethods;
 import com.smartwebarts.guestbazar.retrofit.mCallBackResponse;
 import com.smartwebarts.guestbazar.utils.ApplicationConstants;
@@ -73,8 +74,13 @@ public class BottomAdapter extends RecyclerView.Adapter<BottomAdapter.MyViewHold
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(context, CategoryActivity.class);
-                intent.putExtra(CategoryActivity.CATEGORY, list.get(position));
+//                Intent intent = new Intent(context, CategoryActivity.class);
+//                intent.putExtra(CategoryActivity.CATEGORY, list.get(position));
+//                context.startActivity(intent);
+
+
+                Intent intent = new Intent(context, ProductListActivity.class);
+                intent.putExtra("category", list.get(position));
                 context.startActivity(intent);
             }
         });

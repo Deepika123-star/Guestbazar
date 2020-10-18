@@ -29,7 +29,7 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_view);
 
         url = getIntent().getExtras().getString(DATA, "");
-       //1-------------- title = getIntent().getExtras().getString(TITLE, "");
+       title = getIntent().getExtras().getString(TITLE, "");
         Toolbar_Set.INSTANCE.setToolbar(this, title);
         Toolbar_Set.INSTANCE.setBottomNav(this);
         webview = findViewById(R.id.webview);

@@ -36,4 +36,13 @@
         <item name="android:layoutDirection">rtl</item>
         <item name="searchIcon">@drawable/ic_baseline_search_24</item>
     </style>
+
+<!--    <style name="AppTheme.Green" parent="PayumoneyAppTheme">-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="colorButtonNormal">@color/colorPrimaryDark</item>-->
+<!--        &lt;!&ndash;<item name="alertDialogTheme">@style/AlertDialogStyle_green</item>&ndash;&gt;-->
+<!--        <item name="actionMenuTextColor">@color/white</item>-->
+<!--    </style>-->
 </resources>

@@ -16,6 +16,7 @@ import java.util.List;
 import com.smartwebarts.guestbazar.R;
 import com.smartwebarts.guestbazar.category.CategoryActivity;
 import com.smartwebarts.guestbazar.models.CategoryModel;
+import com.smartwebarts.guestbazar.productlist.ProductListActivity;
 import com.smartwebarts.guestbazar.utils.ApplicationConstants;
 import com.smartwebarts.guestbazar.utils.MyGlide;
 
@@ -44,8 +45,12 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.MyViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CategoryActivity.class);
-                intent.putExtra(CategoryActivity.CATEGORY, list.get(position));
+//                Intent intent = new Intent(context, CategoryActivity.class);
+//                intent.putExtra(CategoryActivity.CATEGORY, list.get(position));
+//                context.startActivity(intent);
+
+                Intent intent = new Intent(context, ProductListActivity.class);
+                intent.putExtra("category", list.get(position));
                 context.startActivity(intent);
             }
         });

@@ -50,7 +50,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ONLINE SHOPPING"
+                android:text="@string/tagline"
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:textSize="16sp"/>
@@ -254,7 +254,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:textColor="@color/material_blue_grey_95"
-                            android:text="contact@guestbazar.com"
+                            android:text="info@guestbazar.com"
                             android:textSize="15sp"
                             android:autoLink="email"
                             android:fontFamily="@font/proximanovaregular" />

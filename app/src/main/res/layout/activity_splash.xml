@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/bangers"
-        android:text="ONLIINE SHOPPING"
+        android:text="@string/tagline"
         android:textSize="35sp"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
