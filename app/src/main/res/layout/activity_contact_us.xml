@@ -80,6 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:gravity="center_horizontal"
                 android:weightSum="5">
                 <LinearLayout
                     android:gravity="center"
@@ -114,6 +115,7 @@
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:layout_height="match_parent">
                     <ImageView
                         android:layout_width="50dp"
@@ -127,6 +129,7 @@
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:layout_height="match_parent">
                     <ImageView
                         android:layout_width="50dp"
@@ -139,6 +142,7 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:layout_width="0dp"
+                    android:visibility="gone"
                     android:layout_weight="1"
                     android:layout_height="match_parent">
                     <ImageView
@@ -226,7 +230,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:text="+91 78956974"
+                            android:text="+91 8791657658"
                             android:textSize="15sp"
                             android:autoLink="phone"
                             android:textColor="@color/material_blue_grey_95"
@@ -254,7 +258,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:textColor="@color/material_blue_grey_95"
-                            android:text="info@guestbazar.com"
+                            android:text="contact@guestbazar.com"
                             android:textSize="15sp"
                             android:autoLink="email"
                             android:fontFamily="@font/proximanovaregular" />

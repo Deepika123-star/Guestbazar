@@ -123,7 +123,7 @@ public class BottomAdapter extends RecyclerView.Adapter<BottomAdapter.MyViewHold
         return list.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
         TextView categoryName, tvViewAll;

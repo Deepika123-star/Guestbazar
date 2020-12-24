@@ -1,10 +1,12 @@
 package com.smartwebarts.guestbazar.dashboard;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
@@ -24,6 +26,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -50,26 +54,39 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.smartwebarts.guestbazar.BuildConfig;
 import com.smartwebarts.guestbazar.ContactUsActivity;
 import com.smartwebarts.guestbazar.R;
+import com.smartwebarts.guestbazar.dashboard.ui.home.BottomAdapter;
+import com.smartwebarts.guestbazar.dashboard.ui.home.HomeViewModel;
+import com.smartwebarts.guestbazar.dashboard.ui.home.SliderImageData;
+import com.smartwebarts.guestbazar.dashboard.ui.home.TopAdapter;
+import com.smartwebarts.guestbazar.models.CategoryModel;
 import com.smartwebarts.guestbazar.retrofit.UtilMethods;
+import com.smartwebarts.guestbazar.retrofit.mCallBackResponse;
 import com.smartwebarts.guestbazar.shopbycategory.ShopByCategoryActivity;
 import com.smartwebarts.guestbazar.SignInActivity;
 import com.smartwebarts.guestbazar.WebViewActivity;
 import com.smartwebarts.guestbazar.history.MyHistoryActivity;
 import com.smartwebarts.guestbazar.profile.ProfileActivity;
+import com.smartwebarts.guestbazar.utils.CustomSlider;
 import com.smartwebarts.guestbazar.utils.Toolbar_Set;
 import com.smartwebarts.guestbazar.vendors.VendorActivity;
 import com.smartwebarts.guestbazar.wallet.WalletActivity;
@@ -79,28 +96,70 @@ import com.smartwebarts.guestbazar.database.DatabaseClient;
 import com.smartwebarts.guestbazar.shared_preference.AppSharedPreferences;
 import com.smartwebarts.guestbazar.utils.ApplicationConstants;
 
-public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BaseSliderView.OnSliderClickListener {
 
     private static final int REQUEST_LOCATION = 202;
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private GoogleApiClient googleApiClient;
 
+    private SliderLayout home_list_banner;
+    private RecyclerView recyclerView, recyclerViewBottom;
+    private Button shopbycategory;
+    private Handler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        Toolbar_Set.INSTANCE.setBottomNav(this);
-        setSupportActionBar(toolbar);
+        init();
 
-        getCartList();
-        checkPermission();
+        if (UtilMethods.INSTANCE.isNetworkAvialable(requireActivity())) {
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        setNavigationDrawer();
+            handler = new Handler();
+
+            final Runnable r = () -> {
+                checkPermission();
+                UtilMethods.INSTANCE.imageSlider(requireActivity(), new mCallBackResponse() {
+                    @Override
+                    public void success(String from, String message) {
+                        Type listType = new TypeToken<ArrayList<SliderImageData>>(){}.getType();
+                        List<SliderImageData> list = new Gson().fromJson(message, listType);
+                        setSlider(list);
+                    }
+
+                    @Override
+                    public void fail(String from) {
+                    }
+                });
+                UtilMethods.INSTANCE.categories(requireActivity(), new mCallBackResponse() {
+                    @Override
+                    public void success(String from, String message) {
+                        Type listType = new TypeToken<ArrayList<CategoryModel>>(){}.getType();
+                        List<CategoryModel> list = new Gson().fromJson(message, listType);
+                        SharedPreferences sharedpreferences = requireActivity().getSharedPreferences(ApplicationConstants.INSTANCE.MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(ApplicationConstants.INSTANCE.PRODUCT_LIST, message);
+                        editor.apply();
+                        setTopRecycler(list);
+                        setBottomRecycler(list);
+                    }
+
+                    @Override
+                    public void fail(String from) {
+                    }
+                });
+//                updateAccessToken();
+                UtilMethods.INSTANCE.version(this, null);
+                setNavigationDrawer();
+            };
+            handler.postDelayed(r, 100);
+
+        } else {
+
+            UtilMethods.INSTANCE.internetNotAvailableMessage(requireActivity());
+        }
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
@@ -112,8 +171,54 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 .setDrawerLayout(drawer)
                 .build();
 
-        UtilMethods.INSTANCE.version(this, null);
+        shopbycategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shopbycategory(v);
+            }
+        });
 
+        getCartList();
+//        checkPermission();
+    }
+
+    private void setBottomRecycler(List<CategoryModel> list) {
+        BottomAdapter adapter = new BottomAdapter(requireActivity(), list);
+        recyclerViewBottom.setAdapter(adapter);
+    }
+
+    private void setTopRecycler(List<CategoryModel> list) {
+        TopAdapter adapter = new TopAdapter(requireActivity(), list);
+        recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 4));
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void shopbycategory(View view) {
+        startActivity(new Intent(requireActivity(), ShopByCategoryActivity.class));
+    }
+
+    private void setSlider(List<SliderImageData> list) {
+
+        for (SliderImageData data : list) {
+            CustomSlider textSliderView = new CustomSlider(requireActivity());
+            // initialize a SliderLayout
+            textSliderView
+//                    .description("")
+                    .image(ApplicationConstants.INSTANCE.OFFER_IMAGES + data.getImage())
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+
+            //add your extra information
+//            textSliderView.bundle(new Bundle());
+//            textSliderView.getBundle()
+//                    .putString("extra","");
+
+            home_list_banner.addSlider(textSliderView);
+        }
+    }
+
+    private Activity requireActivity() {
+        return this;
     }
 
     private void turnongps() {
@@ -343,8 +448,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
             case R.id.live_chat: {
                 try {
-                    String url = "https://chat.whatsapp.com/";
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+//                    String url = "https://chat.whatsapp.com/";
+//                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    String url = "https://api.whatsapp.com/send?phone="+"+918791657658";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
                 } catch (Exception e) {
                     Toast.makeText(this, "Unable to open your whatsapp", Toast.LENGTH_SHORT).show();
                 }
@@ -537,5 +646,24 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 }
                 return;
         }
+    }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+
+    }
+
+    private void init(){
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar_Set.INSTANCE.setBottomNav(this);
+        setSupportActionBar(toolbar);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerViewBottom = (RecyclerView) findViewById(R.id.recyclerViewBottom);
+        home_list_banner =  (SliderLayout) findViewById(R.id.home_img_slider);
+        shopbycategory =  (Button) findViewById(R.id.shopbycategory);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        setNavigationDrawer();
     }
 }

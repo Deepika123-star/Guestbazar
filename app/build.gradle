@@ -16,8 +16,8 @@ android {
         applicationId "com.smartwebarts.guestbazar"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 7
+        versionName "1.0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,11 +36,6 @@ android {
             storePassword 'guestbazarpass'
         }
     }
-  /*  googleaccountGmailDetails{
-        email 'guestbazar3@gmail.com'
-        password 'GuestBazar@123'
-    }
-   */
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

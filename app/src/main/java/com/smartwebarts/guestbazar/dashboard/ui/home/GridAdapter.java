@@ -70,10 +70,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list!=null?(Math.min(list.size(), 6)):0;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
         TextView textView, tvOffer;

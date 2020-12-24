@@ -61,7 +61,7 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.MyViewHolder> {
         return list.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
         TextView categoryName;

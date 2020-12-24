@@ -84,7 +84,6 @@ public class SignInActivity extends AppCompatActivity {
     private String Uemail;
     private String UimageUrl;
     private String Uphone;
-
     private String SocialName;
     private String SocialEmail;
     private String SocialImage;

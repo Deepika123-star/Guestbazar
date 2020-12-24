@@ -9,6 +9,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
@@ -32,6 +33,7 @@ public class MyGlide {
                 .load(url)
                 .placeholder(shimmerDrawable)
 //                .error(R.drawable.logo)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(imageView);
 
     }
@@ -52,6 +54,7 @@ public class MyGlide {
                 .load(url)
                 .placeholder(shimmerDrawable)
 //                .error(R.drawable.logo)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(imageView);
     }
 
@@ -73,6 +76,7 @@ public class MyGlide {
                 .load(url)
                 .placeholder(shimmerDrawable)
 //                .error(R.drawable.logo)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(new BitmapImageViewTarget(imageView){
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -102,6 +106,7 @@ public class MyGlide {
                 .load(url)
                 .placeholder(shimmerDrawable)
 //                .error(R.drawable.logo)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(new BitmapImageViewTarget(imageView){
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -129,6 +134,7 @@ public class MyGlide {
                 .load(url)
                 .placeholder(shimmerDrawable)
                 .error(R.drawable.logo)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(imageView);
 
     }

@@ -860,14 +860,14 @@ public enum UtilMethods {
 
     public void imageSlider(Context context, final mCallBackResponse callBackResponse) {
 
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.default_progress_dialog);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        ProgressBar progressBar = (ProgressBar)dialog.findViewById(R.id.progress);
-        DoubleBounce doubleBounce = new DoubleBounce();
-        progressBar.setIndeterminateDrawable(doubleBounce);
-        dialog.show();
+//        final Dialog dialog = new Dialog(context);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.default_progress_dialog);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//        ProgressBar progressBar = (ProgressBar)dialog.findViewById(R.id.progress);
+//        DoubleBounce doubleBounce = new DoubleBounce();
+//        progressBar.setIndeterminateDrawable(doubleBounce);
+//        dialog.show();
 
         try {
             EndPointInterface git = APIClient.getClient().create(EndPointInterface.class);
@@ -875,7 +875,7 @@ public enum UtilMethods {
             call.enqueue(new Callback<List<SliderImageData>>() {
                 @Override
                 public void onResponse(Call<List<SliderImageData>> call, Response<List<SliderImageData>> response) {
-                    dialog.dismiss();
+//                    dialog.dismiss();
                     String strResponse = new Gson().toJson(response.body());
                     Log.e("strResponse",strResponse);
                     if (response.body()!=null) {
@@ -893,14 +893,14 @@ public enum UtilMethods {
                 @Override
                 public void onFailure(Call<List<SliderImageData>> call, Throwable t) {
                     callBackResponse.fail(t.getMessage());
-                    dialog.dismiss();
+//                    dialog.dismiss();
                 }
             });
 
         } catch (Exception e) {
             e.printStackTrace();
             callBackResponse.fail(e.getMessage());
-            dialog.dismiss();
+//            dialog.dismiss();
         }
     }
 

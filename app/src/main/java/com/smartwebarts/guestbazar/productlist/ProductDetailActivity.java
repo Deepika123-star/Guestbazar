@@ -37,7 +37,7 @@ public class ProductDetailActivity extends AppCompatActivity implements BaseSlid
     private int currentPage = 0;
     private ArrayList<String> sliderImage= new ArrayList<String>();
     private ProductModel addToCartProductItem;
-    private TextView tvName, tvDescription2, tvPrice,tvPricen, tvCurrentPrice, tvDiscount, tvOffer;
+    private TextView tvName, txt_vName, tvDescription2, tvPrice,tvPricen, tvCurrentPrice, tvDiscount, tvOffer;
     private CardView cvoffer;
     private ImageView ivVeg;
     public static final String ID = "id";
@@ -53,6 +53,7 @@ public class ProductDetailActivity extends AppCompatActivity implements BaseSlid
         Toolbar_Set.INSTANCE.setToolbar(this);
         viewPager = findViewById(R.id.viewPager);
         tvName = findViewById(R.id.txt_pName);
+        txt_vName = findViewById(R.id.txt_vName);
 //        tvDescription = findViewById(R.id.txt_pInfo);
         tvDescription2 = findViewById(R.id.tvDescription);
         tvDiscount = findViewById(R.id.txt_discount);
@@ -147,6 +148,12 @@ public class ProductDetailActivity extends AppCompatActivity implements BaseSlid
 
                          addToCartProductItem = new ProductModel(list.get(0));
                          tvName.setText(addToCartProductItem.getName().trim());
+
+                         if (list.get(0)!=null && list.get(0).getVendorName()!=null) {
+                             txt_vName.setText("("+list.get(0).getVendorName().trim()+")");
+                         }
+
+
 //                         tvDescription.setText(addToCartProductItem.getDescription().trim());
                          tvDescription2.setText(addToCartProductItem.getDescription().trim());
                          if (addToCartProductItem.getUnits()!=null && addToCartProductItem.getUnits().size()>0) {
